@@ -1,9 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/stores/WorksStore.ts
 import { makeAutoObservable } from "mobx";
 import { IRootStore } from "./RootStore";
 import { toast } from "react-toastify";
 import WorksService from "../services/WorksService";
+
+function bufferToBase64(bufferObj: any): string {
+  if (bufferObj && Array.isArray(bufferObj.data)) {
+    let binary = "";
+    const bytes = new Uint8Array(bufferObj.data);
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+  }
+  return "";
+}
 
 class WorksStore {
   rootStore: IRootStore;
@@ -21,7 +32,35 @@ class WorksStore {
     this.error = null;
     try {
       const data = await WorksService.getWorks();
-      this.works = data;
+      this.works = data.map((work: any) => {
+        let imageUrl = work.image;
+        if (work.image && work.image.data && Array.isArray(work.image.data)) {
+          const base64 = bufferToBase64(work.image);
+          imageUrl = `data:image/png;base64,${base64}`;
+        }
+        return { ...work, image: imageUrl };
+      });
+    } catch (error: any) {
+      this.error = error.message;
+      toast.error(error.message);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async fetchMyWorks(id: string) {
+    this.isLoading = true;
+    this.error = null;
+    try {
+      const data = await WorksService.getMyWorks(id);
+      this.works = data.map((work: any) => {
+        let imageUrl = work.image;
+        if (work.image && work.image.data && Array.isArray(work.image.data)) {
+          const base64 = bufferToBase64(work.image);
+          imageUrl = `data:image/png;base64,${base64}`;
+        }
+        return { ...work, image: imageUrl };
+      });
     } catch (error: any) {
       this.error = error.message;
       toast.error(error.message);
@@ -33,7 +72,16 @@ class WorksStore {
   async createWork(payload: any) {
     try {
       const newWork = await WorksService.createWork(payload);
-      this.works.push(newWork);
+      let imageUrl = newWork.image;
+      if (
+        newWork.image &&
+        newWork.image.data &&
+        Array.isArray(newWork.image.data)
+      ) {
+        const base64 = bufferToBase64(newWork.image);
+        imageUrl = `data:image/png;base64,${base64}`;
+      }
+      this.works.push({ ...newWork, image: imageUrl });
       toast.success("Работа успешно создана!");
     } catch (error: any) {
       toast.error(error.message);
@@ -43,6 +91,16 @@ class WorksStore {
   async updateWork(id: number, payload: any) {
     try {
       const updatedWork = await WorksService.updateWork(id, payload);
+      let imageUrl = updatedWork.image;
+      if (
+        updatedWork.image &&
+        updatedWork.image.data &&
+        Array.isArray(updatedWork.image.data)
+      ) {
+        const base64 = bufferToBase64(updatedWork.image);
+        imageUrl = `data:image/png;base64,${base64}`;
+      }
+      updatedWork.image = imageUrl;
       this.works = this.works.map((w) => (w.id === id ? updatedWork : w));
     } catch (error: any) {
       toast.error(error.message);

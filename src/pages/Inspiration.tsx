@@ -113,18 +113,6 @@ export const CreativeGallery = observer(() => {
     return matchesFilter && matchesSearch;
   });
 
-  function base64ToBlobUrl(base64Data, contentType = "image/png") {
-    const byteCharacters = atob(
-      base64Data.replace(/^data:image\/\w+;base64,/, "")
-    );
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: contentType });
-    return URL.createObjectURL(blob);
-  }
   return (
     <PageWrapper>
       <ContentWrapper>
@@ -153,7 +141,7 @@ export const CreativeGallery = observer(() => {
                   <div style={{ position: "relative" }}>
                     <img
                       alt={work.title}
-                      src={base64ToBlobUrl(work.image)}
+                      src={work.image}
                       style={{ width: "100%", height: "300px" }}
                     />
                     <div

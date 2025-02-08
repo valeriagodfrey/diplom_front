@@ -33,13 +33,10 @@ const CustomHeader: React.FC = observer(() => {
         <Link to="/account">Мой аккаунт</Link>
       </Menu.Item>
       <Menu.Item key="gallery">
-        <Link to="/gallery">Моя галерея</Link>
+        <Link to="/my-gallery">Моя галерея</Link>
       </Menu.Item>
-      <Menu.Item key="chats">
-        <Link to="/chats">Чаты</Link>
-      </Menu.Item>
-      <Menu.Item key="sales">
-        <Link to="/sales">Продажи</Link>
+      <Menu.Item key="community">
+        <Link to="/my-communities">Чаты</Link>
       </Menu.Item>
       <Menu.Item key="logout" onClick={() => authStore.logout()}>
         Выйти

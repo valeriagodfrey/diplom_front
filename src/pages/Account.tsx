@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+// src/pages/Account.tsx
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
-// import { useRootStore } from "../stores/RootStore";
+import { useRootStore } from "../stores/RootStore";
 import { Button, Input } from "antd";
 import { EditOutlined, SaveOutlined } from "@ant-design/icons";
 
@@ -86,49 +87,95 @@ const EditableField = ({
       {isEditing ? (
         <Input value={value} onChange={(e) => onChange(e.target.value)} />
       ) : (
-        <strong>{value}</strong>
+        <strong>{value && value.trim() !== "" ? value : "–"}</strong>
       )}
     </Field>
   );
 };
 
-const Account = observer(() => {
-  // const { authStore } = useRootStore();
-  const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [isEditingPersonalInfo, setIsEditingPersonalInfo] = useState(false);
-  const [isEditingAddress, setIsEditingAddress] = useState(false);
+export const Account = observer(() => {
+  const { authStore, userStore } = useRootStore();
 
+  // Локальное состояние для редактируемых данных профиля
   const [profileState, setProfileState] = useState({
-    email: "info@gmail.com",
-    userType: "Пользователь",
+    email: userStore.user?.email || "",
+    userType: userStore.user?.role || "user",
   });
 
   const [personalInfoState, setPersonalInfoState] = useState({
-    firstName: "Иван",
-    lastName: "Иванов",
-    dob: "12-10-1990",
-    phone: "+373 333 333 33",
+    firstName: userStore.user?.firstName || "",
+    lastName: userStore.user?.secondName || "",
+    dob: userStore.user?.dob
+      ? new Date(userStore.user.dob).toISOString().substring(0, 10)
+      : "",
+    phone: userStore.user?.phone || "",
   });
 
   const [addressState, setAddressState] = useState({
-    country: "Молдова",
-    city: "Тирасполь",
-    postalCode: "3300",
+    country: userStore.user?.country || "",
+    city: userStore.user?.city || "",
+    postalCode: userStore.user?.postalCode || "",
   });
 
-  const saveProfile = () => {
-    // authStore.email = profileState.email;
-    // authStore.userType = profileState.userType;
-    setIsEditingProfile(false);
+  useEffect(() => {
+    if (authStore.user) {
+      // Предполагаем, что authStore.user.id соответствует id в userStore
+      userStore.fetchUser(authStore.user.id);
+    }
+  }, [authStore.user, userStore]);
+
+  useEffect(() => {
+    if (userStore.user) {
+      setProfileState({
+        email: userStore.user.email || "",
+        userType: userStore.user.role || "user",
+      });
+      setPersonalInfoState({
+        firstName: userStore.user.firstName || "",
+        lastName: userStore.user.secondName || "",
+        dob: userStore.user.dob
+          ? new Date(userStore.user.dob).toISOString().substring(0, 10)
+          : "",
+        phone: userStore.user.phone || "",
+      });
+      setAddressState({
+        country: userStore.user.country || "",
+        city: userStore.user.city || "",
+        postalCode: userStore.user.postalCode || "",
+      });
+    }
+  }, [userStore.user]);
+
+  const saveProfile = async () => {
+    await userStore.updateUser({
+      ...userStore.user,
+      email: profileState.email,
+      role: profileState.userType,
+    });
   };
 
-  const savePersonalInfo = () => {
-    setIsEditingPersonalInfo(false);
+  const savePersonalInfo = async () => {
+    const updateData = {
+      firstName: personalInfoState.firstName,
+      secondName: personalInfoState.lastName,
+      dob: personalInfoState.dob,
+      phone: personalInfoState.phone,
+    };
+    await userStore.updateUser(updateData);
   };
 
-  const saveAddress = () => {
-    setIsEditingAddress(false);
+  const saveAddress = async () => {
+    const updateData = {
+      country: addressState.country,
+      city: addressState.city,
+      postalCode: addressState.postalCode,
+    };
+    await userStore.updateUser(updateData);
   };
+
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isEditingPersonalInfo, setIsEditingPersonalInfo] = useState(false);
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
 
   return (
     <ProfileWrapper>
@@ -140,7 +187,10 @@ const Account = observer(() => {
             <Button
               type="primary"
               icon={<SaveOutlined />}
-              onClick={saveProfile}
+              onClick={() => {
+                saveProfile();
+                setIsEditingProfile(false);
+              }}
             >
               Сохранить
             </Button>
@@ -155,7 +205,7 @@ const Account = observer(() => {
           )}
         </SectionHeader>
         <Avatar>
-          <img src="https://via.placeholder.com/64" alt={""} />
+          <img src="https://via.placeholder.com/64" alt="avatar" />
           <div>
             <EditableField
               label="Email"
@@ -167,9 +217,15 @@ const Account = observer(() => {
             />
             <EditableField
               label="Тип пользователя"
-              value={profileState.userType}
+              value={
+                profileState.userType === "mentor"
+                  ? "Ментор"
+                  : profileState.userType === "user"
+                  ? "Пользователь"
+                  : "–"
+              }
               isEditing={isEditingProfile}
-              onChange={(value) =>
+              onChange={(value: "user" | "mentor") =>
                 setProfileState((prev) => ({ ...prev, userType: value }))
               }
             />
@@ -185,7 +241,10 @@ const Account = observer(() => {
             <Button
               type="primary"
               icon={<SaveOutlined />}
-              onClick={savePersonalInfo}
+              onClick={() => {
+                savePersonalInfo();
+                setIsEditingPersonalInfo(false);
+              }}
             >
               Сохранить
             </Button>
@@ -243,7 +302,10 @@ const Account = observer(() => {
             <Button
               type="primary"
               icon={<SaveOutlined />}
-              onClick={saveAddress}
+              onClick={() => {
+                saveAddress();
+                setIsEditingAddress(false);
+              }}
             >
               Сохранить
             </Button>
@@ -287,5 +349,3 @@ const Account = observer(() => {
     </ProfileWrapper>
   );
 });
-
-export default Account;

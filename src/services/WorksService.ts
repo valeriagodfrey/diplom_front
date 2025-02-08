@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/services/WorksService.ts (клиентская часть)
+// src/services/WorksService.ts
 class WorksService {
   static async getWorks() {
     const response = await fetch("http://localhost:4200/works", {
@@ -13,19 +13,24 @@ class WorksService {
     return response.json();
   }
 
-  // Метод создания работы через FormData (загрузка файла)
-  static async createWork(payload: any) {
-    const formData = new FormData();
-    formData.append("title", payload.title);
-    formData.append("category", payload.category);
-    formData.append("author", payload.author);
-    // payload.image должен быть экземпляром File или Blob
-    formData.append("image", payload.image);
+  static async getMyWorks(id: string) {
+    const response = await fetch(`http://localhost:4200/works/my/${id}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Ошибка загрузки работ");
+    }
+    return response.json();
+  }
 
+  // Метод принимает FormData напрямую
+  static async createWork(formData: FormData) {
     const response = await fetch("http://localhost:4200/works/upload", {
       method: "POST",
       body: formData,
-      // Не указываем Content-Type, чтобы браузер сам установил multipart/form-data с boundary
+      // Не указываем заголовок Content-Type, чтобы браузер сам сформировал multipart/form-data с boundary
     });
     if (!response.ok) {
       const errorData = await response.json();

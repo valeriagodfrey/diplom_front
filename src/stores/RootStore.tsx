@@ -1,19 +1,23 @@
 import React, { createContext, useContext, ReactNode } from "react";
 import AuthStore from "./AuthStore";
 import WorksStore from "./WorksStore";
+import UserStore from "./UserStore";
 
 export interface IRootStore {
   authStore: AuthStore;
   worksStore: WorksStore;
+  userStore: UserStore;
 }
 
 class RootStore {
   authStore: AuthStore;
   worksStore: WorksStore;
+  userStore: UserStore;
 
   constructor() {
     this.authStore = new AuthStore(this);
     this.worksStore = new WorksStore(this);
+    this.userStore = new UserStore(this);
   }
 }
 

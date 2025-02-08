@@ -3,14 +3,16 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import CustomLayout from "./shared/components/Layout";
-import { RootStoreProvider } from "./stores/RootStore";
-import Account from "./pages/Account";
 import Courses from "./pages/Courses";
 import Community from "./pages/Community";
 import Toast from "./components/Toast";
 import { ConfigProvider } from "antd";
 import { ScrollToTop } from "./utils/scroll-to-top";
 import { CreativeGallery } from "./pages/Inspiration";
+import { MyGallery } from "./pages/MyGallery";
+import { RootStoreProvider } from "./stores/RootStore";
+import { Account } from "./pages/Account";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const AppRoutes: React.FC = () => (
   <RootStoreProvider>
@@ -34,11 +36,25 @@ const AppRoutes: React.FC = () => (
     >
       <Router>
         <ScrollToTop />
-
         <CustomLayout>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/account" element={<Account />} />
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <Account />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-gallery"
+              element={
+                <ProtectedRoute>
+                  <MyGallery />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/inspiration" element={<CreativeGallery />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/community" element={<Community />} />
