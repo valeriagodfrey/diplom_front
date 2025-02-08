@@ -1,3 +1,4 @@
+// src/components/ProtectedRoute.tsx
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useRootStore } from "../stores/RootStore";
@@ -8,6 +9,11 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { authStore } = useRootStore();
+
+  if (authStore.isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
   if (!authStore.isAuthenticated) {
     return <Navigate to="/" replace />;
   }

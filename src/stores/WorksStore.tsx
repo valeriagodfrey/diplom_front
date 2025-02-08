@@ -34,6 +34,7 @@ class WorksStore {
       const data = await WorksService.getWorks();
       this.works = data.map((work: any) => {
         let imageUrl = work.image;
+        // Если поле image пришло как сериализованный Buffer (объект с data)
         if (work.image && work.image.data && Array.isArray(work.image.data)) {
           const base64 = bufferToBase64(work.image);
           imageUrl = `data:image/png;base64,${base64}`;
@@ -102,6 +103,17 @@ class WorksStore {
       }
       updatedWork.image = imageUrl;
       this.works = this.works.map((w) => (w.id === id ? updatedWork : w));
+      toast.success("Работа успешно обновлена!");
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      await WorksService.remove(id);
+      this.works = this.works.filter((w) => w.id !== id);
+      toast.success("Работа успешно удалена!");
     } catch (error: any) {
       toast.error(error.message);
     }
