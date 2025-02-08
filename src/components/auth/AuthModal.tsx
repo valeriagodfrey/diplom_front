@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/auth/AuthModal.tsx
-import React, { useEffect } from "react";
+import React from "react";
 import { Modal, Button, Form, Input, Select } from "antd";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
@@ -46,10 +46,6 @@ const StyledButton = styled(Button)`
 const AuthModal: React.FC = observer(() => {
   const { authStore } = useRootStore();
   const [form] = Form.useForm<FormValues>(); // Создаем объект формы
-
-  useEffect(() => {
-    authStore.checkAuth(); // Проверяем токен при загрузке
-  }, [authStore]);
 
   const handleSubmit = async (values: FormValues) => {
     const { email, password, role } = values;

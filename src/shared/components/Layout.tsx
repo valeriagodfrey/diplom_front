@@ -1,8 +1,9 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { Layout } from "antd";
 import styled from "styled-components";
 import CustomHeader from "./Header";
 import Footer from "./Footer";
+import { useRootStore } from "../../stores/RootStore";
 
 const { Content } = Layout;
 
@@ -14,6 +15,11 @@ const StyledLayout = styled(Layout)`
 `;
 
 const CustomLayout = ({ children }: PropsWithChildren) => {
+  const { authStore } = useRootStore();
+
+  useEffect(() => {
+    authStore.checkAuth(); // Проверяем токен при загрузке
+  }, [authStore]);
   return (
     <StyledLayout>
       <CustomHeader />

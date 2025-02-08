@@ -6,7 +6,6 @@ import { UserOutlined, DownOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import logo from "../../assets/logo.png";
 import { useRootStore } from "../../stores/RootStore";
-import AuthController from "../../controllers/AuthController";
 import AuthModal from "../../components/auth/AuthModal";
 import { observer } from "mobx-react-lite";
 
@@ -15,7 +14,6 @@ const { Header } = Layout;
 const CustomHeader: React.FC = observer(() => {
   const { authStore } = useRootStore();
   const location = useLocation();
-  const controller = AuthController();
 
   // Определяем activeKey на основе текущего пути
   let activeKey: string = "";
@@ -87,11 +85,11 @@ const CustomHeader: React.FC = observer(() => {
           <AuthButtons>
             <Button
               type="primary"
-              onClick={() => controller.setLoginModalVisible(true)}
+              onClick={() => authStore.setLoginModalVisible(true)}
             >
               Войти
             </Button>
-            <Button onClick={() => controller.setRegisterModalVisible(true)}>
+            <Button onClick={() => authStore.setRegisterModalVisible(true)}>
               Зарегистрироваться
             </Button>
             {authStore.modalVisible && <AuthModal />}

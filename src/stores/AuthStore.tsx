@@ -170,6 +170,15 @@ class AuthStore {
   setAuthenticated = (authenticated: boolean) => {
     this.isAuthenticated = authenticated;
   };
+  setLoginModalVisible = (visible: boolean) => {
+    this.isRegister = false;
+    this.setModalVisible(visible);
+  };
+
+  setRegisterModalVisible = (visible: boolean) => {
+    this.isRegister = true;
+    this.setModalVisible(visible);
+  };
 }
 
 export default AuthStore;

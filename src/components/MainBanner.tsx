@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import { Button } from "antd";
 import background from "../assets/home/main-banner.png"; // убедитесь, что путь корректный
-import AuthController from "../controllers/AuthController";
+import { useRootStore } from "../stores/RootStore";
 
 const BannerContainer = styled.div`
   height: 600px;
@@ -56,7 +56,7 @@ const CustomButton = styled(Button)`
 `;
 
 const MainBanner: React.FC = () => {
-  const controller = AuthController();
+  const { authStore } = useRootStore();
   return (
     <BannerContainer>
       <Title>Твори. Делись. Вдохновляй.</Title>
@@ -66,7 +66,7 @@ const MainBanner: React.FC = () => {
       <CustomButton
         type="primary"
         size="large"
-        onClick={() => controller.setRegisterModalVisible(true)}
+        onClick={() => authStore.setRegisterModalVisible(true)}
       >
         Узнать Больше
       </CustomButton>

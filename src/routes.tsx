@@ -5,12 +5,12 @@ import Home from "./pages/Home";
 import CustomLayout from "./shared/components/Layout";
 import { RootStoreProvider } from "./stores/RootStore";
 import Account from "./pages/Account";
-import CreativeGallery from "./pages/Inspiration";
 import Courses from "./pages/Courses";
 import Community from "./pages/Community";
 import Toast from "./components/Toast";
 import { ConfigProvider } from "antd";
 import { ScrollToTop } from "./utils/scroll-to-top";
+import { CreativeGallery } from "./pages/Inspiration";
 
 const AppRoutes: React.FC = () => (
   <RootStoreProvider>

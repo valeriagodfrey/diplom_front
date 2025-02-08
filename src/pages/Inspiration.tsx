@@ -1,10 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+// src/pages/Inspiration.tsx
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Card, Button, Select, Input, Row, Col } from "antd";
+import { Row, Col, Card, Button, Select, Input } from "antd";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
-import image from "../assets/image1.jpg";
+import useWorksController from "../controllers/WorksController";
+import { observer } from "mobx-react-lite";
+
 const { Option } = Select;
+const { Search } = Input;
 
 const PageWrapper = styled.div`
   padding: 24px;
@@ -35,7 +38,7 @@ const StyledSelect = styled(Select)`
   width: 200px;
 `;
 
-const StyledSearch = styled(Input.Search)`
+const StyledSearch = styled(Search)`
   width: 300px;
 `;
 
@@ -52,7 +55,6 @@ const WorkCard = styled(Card)`
     aspect-ratio: 1;
     object-fit: cover;
   }
-
   .ant-card-body {
     padding: 16px;
   }
@@ -92,255 +94,17 @@ const LikeButton = styled(Button)`
   gap: 4px;
 `;
 
-const FavoriteIcon = styled.div<{ isFavorite: boolean }>`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 1;
-
-  .anticon {
-    font-size: 24px;
-    color: ${(props) => (props.isFavorite ? "#ff4d4f" : "#fff")};
-    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
-    cursor: pointer;
-  }
-`;
-
-const mockData = [
-  {
-    id: 1,
-    title: "Abstract Painting",
-    category: "Art",
-    image: "assets/image1.jpg",
-    likes: 120,
-    isLiked: false,
-    isFavorite: false,
-    author: "Elena Smith",
-  },
-  {
-    id: 2,
-    title: "Modern Design",
-    category: "Design",
-    image: "/api/placeholder/400/400",
-    likes: 200,
-    isLiked: false,
-    isFavorite: false,
-    author: "Mike Johnson",
-  },
-  {
-    id: 3,
-    title: "Nature Photography",
-    category: "Photography",
-    image: "/api/placeholder/400/400",
-    likes: 150,
-    isLiked: false,
-    isFavorite: false,
-    author: "Sarah Green",
-  },
-  {
-    id: 4,
-    title: "Digital Illustration",
-    category: "Art",
-    image: "/api/placeholder/400/400",
-    likes: 95,
-    isLiked: false,
-    isFavorite: false,
-    author: "David Lee",
-  },
-  {
-    id: 5,
-    title: "Creative Typography",
-    category: "Design",
-    image: "/api/placeholder/400/400",
-    likes: 180,
-    isLiked: false,
-    isFavorite: false,
-    author: "Anna White",
-  },
-  {
-    id: 6,
-    title: "Portrait Photography",
-    category: "Photography",
-    image: "/api/placeholder/400/400",
-    likes: 140,
-    isLiked: false,
-    isFavorite: false,
-    author: "John Black",
-  },
-  {
-    id: 7,
-    title: "Surreal Art",
-    category: "Art",
-    image: "/api/placeholder/400/400",
-    likes: 220,
-    isLiked: false,
-    isFavorite: false,
-    author: "Lisa Chen",
-  },
-  {
-    id: 8,
-    title: "UI/UX Concepts",
-    category: "Design",
-    image: "/api/placeholder/400/400",
-    likes: 175,
-    isLiked: false,
-    isFavorite: false,
-    author: "Mark Wilson",
-  },
-  {
-    id: 9,
-    title: "Landscape Shots",
-    category: "Photography",
-    image: "/api/placeholder/400/400",
-    likes: 130,
-    isLiked: false,
-    isFavorite: false,
-    author: "Emma Davis",
-  },
-  {
-    id: 10,
-    title: "Acrylic Canvas",
-    category: "Art",
-    image: "/api/placeholder/400/400",
-    likes: 115,
-    isLiked: false,
-    isFavorite: false,
-    author: "Tom Brown",
-  },
-  {
-    id: 11,
-    title: "Brand Identity",
-    category: "Design",
-    image: "/api/placeholder/400/400",
-    likes: 190,
-    isLiked: false,
-    isFavorite: false,
-    author: "Kate Miller",
-  },
-  {
-    id: 12,
-    title: "Street Photography",
-    category: "Photography",
-    image: "/api/placeholder/400/400",
-    likes: 125,
-    isLiked: false,
-    isFavorite: false,
-    author: "Peter Yang",
-  },
-  {
-    id: 13,
-    title: "Concept Art",
-    category: "Art",
-    image: "/api/placeholder/400/400",
-    likes: 205,
-    isLiked: false,
-    isFavorite: false,
-    author: "Nina Park",
-  },
-  {
-    id: 14,
-    title: "Minimalist Design",
-    category: "Design",
-    image: "/api/placeholder/400/400",
-    likes: 165,
-    isLiked: false,
-    isFavorite: false,
-    author: "Alex Gray",
-  },
-  {
-    id: 15,
-    title: "Macro Photography",
-    category: "Photography",
-    image: "/api/placeholder/400/400",
-    likes: 135,
-    isLiked: false,
-    isFavorite: false,
-    author: "Chris Wong",
-  },
-  {
-    id: 16,
-    title: "Cubist Art",
-    category: "Art",
-    image: "/api/placeholder/400/400",
-    likes: 110,
-    isLiked: false,
-    isFavorite: false,
-    author: "Rachel Adams",
-  },
-  {
-    id: 17,
-    title: "Packaging Design",
-    category: "Design",
-    image: "/api/placeholder/400/400",
-    likes: 185,
-    isLiked: false,
-    isFavorite: false,
-    author: "James Martin",
-  },
-  {
-    id: 18,
-    title: "Urban Photography",
-    category: "Photography",
-    image: "/api/placeholder/400/400",
-    likes: 145,
-    isLiked: false,
-    isFavorite: false,
-    author: "Sofia Garcia",
-  },
-  {
-    id: 19,
-    title: "Pop Art",
-    category: "Art",
-    image: "/api/placeholder/400/400",
-    likes: 125,
-    isLiked: false,
-    isFavorite: false,
-    author: "Daniel Kim",
-  },
-  {
-    id: 20,
-    title: "Interactive Design",
-    category: "Design",
-    image: "/api/placeholder/400/400",
-    likes: 195,
-    isLiked: false,
-    isFavorite: false,
-    author: "Maria Lopez",
-  },
-];
-
-const CreativeGallery = () => {
-  const [works, setWorks] = useState(mockData);
+export const CreativeGallery = observer(() => {
+  const worksController = useWorksController();
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleLike = (id: any) => {
-    setWorks(
-      works.map((work) => {
-        if (work.id === id) {
-          return {
-            ...work,
-            isLiked: !work.isLiked,
-            likes: work.isLiked ? work.likes - 1 : work.likes + 1,
-          };
-        }
-        return work;
-      })
-    );
-  };
+  // Загружаем работы с сервера при монтировании компонента
+  useEffect(() => {
+    worksController.fetchWorks();
+  }, [worksController]);
 
-  const handleFavorite = (id: any) => {
-    setWorks(
-      works.map((work) => {
-        if (work.id === id) {
-          return { ...work, isFavorite: !work.isFavorite };
-        }
-        return work;
-      })
-    );
-  };
-
-  const filteredWorks = works.filter((work) => {
+  const filteredWorks = worksController.works.filter((work) => {
     const matchesFilter =
       filter === "all" || work.category.toLowerCase() === filter.toLowerCase();
     const matchesSearch =
@@ -349,11 +113,22 @@ const CreativeGallery = () => {
     return matchesFilter && matchesSearch;
   });
 
+  function base64ToBlobUrl(base64Data, contentType = "image/png") {
+    const byteCharacters = atob(
+      base64Data.replace(/^data:image\/\w+;base64,/, "")
+    );
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: contentType });
+    return URL.createObjectURL(blob);
+  }
   return (
     <PageWrapper>
       <ContentWrapper>
         <Title>Создавай и вдохновляй</Title>
-
         <FiltersWrapper>
           <StyledSelect
             defaultValue="all"
@@ -364,14 +139,12 @@ const CreativeGallery = () => {
             <Option value="design">Design</Option>
             <Option value="photography">Photography</Option>
           </StyledSelect>
-
           <StyledSearch
             placeholder="Введите искомого творца..."
             allowClear
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </FiltersWrapper>
-
         <WorksGrid gutter={24}>
           {filteredWorks.map((work) => (
             <WorkCol key={work.id} span={8}>
@@ -380,15 +153,33 @@ const CreativeGallery = () => {
                   <div style={{ position: "relative" }}>
                     <img
                       alt={work.title}
-                      src={image}
+                      src={base64ToBlobUrl(work.image)}
                       style={{ width: "100%", height: "300px" }}
                     />
-                    <FavoriteIcon
-                      isFavorite={work.isFavorite}
-                      onClick={() => handleFavorite(work.id)}
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
+                        zIndex: 1,
+                        cursor: "pointer",
+                      }}
+                      onClick={() => worksController.toggleFavorite(work.id)}
                     >
-                      {work.isFavorite ? <HeartFilled /> : <HeartOutlined />}
-                    </FavoriteIcon>
+                      {work.isFavorite ? (
+                        <HeartFilled
+                          style={{ fontSize: 24, color: "#ff4d4f" }}
+                        />
+                      ) : (
+                        <HeartOutlined
+                          style={{
+                            fontSize: 24,
+                            color: "#fff",
+                            filter: "drop-shadow(0 0 2px rgba(0,0,0,0.3))",
+                          }}
+                        />
+                      )}
+                    </div>
                   </div>
                 }
               >
@@ -397,7 +188,6 @@ const CreativeGallery = () => {
                   <AuthorName>by {work.author}</AuthorName>
                   <Category>{work.category}</Category>
                 </CardMeta>
-
                 <CardActions>
                   <LikeButton
                     type="text"
@@ -408,14 +198,13 @@ const CreativeGallery = () => {
                         <HeartOutlined />
                       )
                     }
-                    onClick={() => handleLike(work.id)}
+                    onClick={() => worksController.likeWork(work.id)}
                   >
                     {work.likes}
                   </LikeButton>
-
                   <Button
                     type="primary"
-                    onClick={() => handleFavorite(work.id)}
+                    onClick={() => worksController.toggleFavorite(work.id)}
                   >
                     {work.isFavorite ? "Saved" : "Save"}
                   </Button>
@@ -427,6 +216,4 @@ const CreativeGallery = () => {
       </ContentWrapper>
     </PageWrapper>
   );
-};
-
-export default CreativeGallery;
+});

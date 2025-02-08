@@ -30,6 +30,16 @@ class WorksStore {
     }
   }
 
+  async createWork(payload: any) {
+    try {
+      const newWork = await WorksService.createWork(payload);
+      this.works.push(newWork);
+      toast.success("Работа успешно создана!");
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }
+
   async updateWork(id: number, payload: any) {
     try {
       const updatedWork = await WorksService.updateWork(id, payload);
