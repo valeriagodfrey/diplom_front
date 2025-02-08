@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Button } from "antd";
 import background from "../assets/home/main-banner.png"; // убедитесь, что путь корректный
 import { useRootStore } from "../stores/RootStore";
+import { useNavigate } from "react-router-dom";
 
 const BannerContainer = styled.div`
   height: 600px;
@@ -57,6 +58,7 @@ const CustomButton = styled(Button)`
 
 const MainBanner: React.FC = () => {
   const { authStore } = useRootStore();
+  const navigate = useNavigate();
   return (
     <BannerContainer>
       <Title>Твори. Делись. Вдохновляй.</Title>
@@ -66,7 +68,11 @@ const MainBanner: React.FC = () => {
       <CustomButton
         type="primary"
         size="large"
-        onClick={() => authStore.setRegisterModalVisible(true)}
+        onClick={() =>
+          !authStore.token
+            ? authStore.setRegisterModalVisible(true)
+            : navigate("/account")
+        }
       >
         Узнать Больше
       </CustomButton>

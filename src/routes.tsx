@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import CustomLayout from "./shared/components/Layout";
 import Courses from "./pages/Courses";
-import Community from "./pages/Community";
 import Toast from "./components/Toast";
 import { ConfigProvider } from "antd";
 import { ScrollToTop } from "./utils/scroll-to-top";
@@ -13,6 +12,8 @@ import { MyGallery } from "./pages/MyGallery";
 import { RootStoreProvider } from "./stores/RootStore";
 import { Account } from "./pages/Account";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { Community } from "./pages/Community";
+import CourseDetailPage from "./pages/CourseDetailPage";
 
 const AppRoutes: React.FC = () => (
   <RootStoreProvider>
@@ -57,6 +58,7 @@ const AppRoutes: React.FC = () => (
             />
             <Route path="/inspiration" element={<CreativeGallery />} />
             <Route path="/courses" element={<Courses />} />
+            <Route path="/courses/:courseId" element={<CourseDetailPage />} />
             <Route path="/community" element={<Community />} />
           </Routes>
           <Toast />

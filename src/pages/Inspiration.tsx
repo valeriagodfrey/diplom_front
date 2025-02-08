@@ -11,7 +11,7 @@ const { Search } = Input;
 
 const PageWrapper = styled.div`
   padding: 24px;
-  background: #f0f2f5;
+  background: rgb(226, 241, 255);
   min-height: 100vh;
 `;
 
