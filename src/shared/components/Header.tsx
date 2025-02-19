@@ -2,20 +2,19 @@
 import React from "react";
 import { Layout, Menu, Dropdown, Button, Avatar } from "antd";
 import { Link, useLocation } from "react-router-dom";
-import { UserOutlined, DownOutlined } from "@ant-design/icons";
+import { DownOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import logo from "../../assets/logo.png";
 import { useRootStore } from "../../stores/RootStore";
 import AuthModal from "../../components/auth/AuthModal";
 import { observer } from "mobx-react-lite";
-
+import avatar from "./../../assets/avatar.jpg";
 const { Header } = Layout;
 
 const CustomHeader: React.FC = observer(() => {
   const { authStore } = useRootStore();
   const location = useLocation();
 
-  // Определяем activeKey на основе текущего пути
   let activeKey: string = "";
   if (location.pathname === "/" || location.pathname === "/home") {
     activeKey = "/";
@@ -69,7 +68,7 @@ const CustomHeader: React.FC = observer(() => {
         {authStore.isAuthenticated ? (
           <Dropdown overlay={profileMenu} trigger={["click"]}>
             <AvatarWrapper>
-              <Avatar icon={<UserOutlined />} />
+              <Avatar src={avatar} />
               <UserName>
                 {authStore.user && authStore.user.email
                   ? authStore.user.email

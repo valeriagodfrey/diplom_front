@@ -75,6 +75,48 @@ class CommunityStore {
       toast.error(error.message);
     }
   }
+
+  async joinCommunity(communityId: number, userId: string) {
+    try {
+      const updatedCommunity = await CommunityService.joinCommunity(
+        communityId,
+        userId
+      );
+      this.communities = this.communities.map((c) =>
+        c.id === communityId ? updatedCommunity : c
+      );
+      toast.success("Вы успешно вступили в сообщество!");
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }
+
+  async leaveCommunity(communityId: number, userId: string) {
+    try {
+      const updatedCommunity = await CommunityService.leaveCommunity(
+        communityId,
+        userId
+      );
+      this.communities = this.communities.map((c) =>
+        c.id === communityId ? updatedCommunity : c
+      );
+      toast.success("Вы успешно покинули сообщество!");
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }
+  async fetchCommunityById(communityId: number) {
+    try {
+      const updatedCommunity = await CommunityService.getCommunityById(
+        communityId
+      );
+
+      return updatedCommunity;
+    } catch (error: any) {
+      this.error = error.message;
+      throw error;
+    }
+  }
 }
 
 export default CommunityStore;

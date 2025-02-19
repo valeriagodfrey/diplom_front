@@ -108,28 +108,19 @@ const Footer: React.FC = () => {
             <Link to="/">Главная</Link>
           </ListItem>
           <ListItem>
-            <Link to="/profiles">Профили</Link>
+            <Link to="/inspiration">Творческие Работы</Link>
           </ListItem>
           <ListItem>
-            <Link to="/inspiration">Творческие Работы</Link>
+            <Link to="/courses">Обучающие курсы</Link>
+          </ListItem>
+          <ListItem>
+            <Link to="/community">Сообщества</Link>
           </ListItem>
         </List>
       </Section>
       <Section>
         <Title>Дополнительно</Title>
         <List>
-          <ListItem>
-            <Link to="/courses">Образовательные Материалы</Link>
-          </ListItem>
-          <ListItem>
-            <Link to="/mentorship">Менторство</Link>
-          </ListItem>
-          <ListItem>
-            <Link to="/communities">Сообщества</Link>
-          </ListItem>
-          <ListItem>
-            <Link to="/groups">Группы</Link>
-          </ListItem>
           <ListItem>
             <Link to="/contact">Контактная Информация</Link>
           </ListItem>

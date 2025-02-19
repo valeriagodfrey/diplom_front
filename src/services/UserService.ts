@@ -10,6 +10,7 @@ export interface IUser {
   country?: string; // страна (необязательное)
   city?: string; // город (необязательное)
   postalCode?: string; // почтовый индекс (необязательное)
+  joinedCommunities: number[];
 }
 
 class UserService {

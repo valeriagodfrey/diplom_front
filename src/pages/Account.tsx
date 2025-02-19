@@ -5,6 +5,7 @@ import { observer } from "mobx-react-lite";
 import { useRootStore } from "../stores/RootStore";
 import { Button, Input } from "antd";
 import { EditOutlined, SaveOutlined } from "@ant-design/icons";
+import avatar from "../assets/avatar.jpg";
 
 const ProfileWrapper = styled.div`
   padding: 24px;
@@ -205,7 +206,7 @@ export const Account = observer(() => {
           )}
         </SectionHeader>
         <Avatar>
-          <img src="https://via.placeholder.com/64" alt="avatar" />
+          <img src={avatar} alt="avatar" />
           <div>
             <EditableField
               label="Email"

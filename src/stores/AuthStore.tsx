@@ -54,7 +54,9 @@ class AuthStore {
       }
 
       const data = await response.json();
+
       this.token = data.token;
+
       // Сохраняем токен в cookie (например, на 7 дней)
       Cookies.set("token", data.token, { expires: 7 });
 
@@ -88,7 +90,9 @@ class AuthStore {
       }
 
       const data = await response.json();
+
       this.token = data.token;
+
       // Сохраняем токен в cookie
       Cookies.set("token", data.token, { expires: 7 });
 
@@ -127,7 +131,9 @@ class AuthStore {
       }
 
       const data = await response.json();
+
       this.user = data.user;
+
       this.token = token;
       this.isAuthenticated = true;
     } catch (error: any) {

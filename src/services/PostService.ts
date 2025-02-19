@@ -1,7 +1,11 @@
+// src/services/PostService.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 export interface IPost {
   id: number;
+  title: string;
   content: string;
+  tags?: string[];
   image?: string;
   communityId: number;
   userId: string;
