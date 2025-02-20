@@ -19,6 +19,7 @@ function bufferToBase64(bufferObj: any): string {
 class WorksStore {
   rootStore: IRootStore;
   works: any[] = [];
+  myWorks: any[] = [];
   isLoading: boolean = false;
   error: string | null = null;
 
@@ -54,7 +55,7 @@ class WorksStore {
     this.error = null;
     try {
       const data = await WorksService.getMyWorks(id);
-      this.works = data.map((work: any) => {
+      this.myWorks = data.map((work: any) => {
         let imageUrl = work.image;
         if (work.image && work.image.data && Array.isArray(work.image.data)) {
           const base64 = bufferToBase64(work.image);
@@ -89,7 +90,7 @@ class WorksStore {
     }
   }
 
-  async updateWork(id: number, payload: any) {
+  async updateWork(id: number, payload: any): Promise<any> {
     try {
       const updatedWork = await WorksService.updateWork(id, payload);
       let imageUrl = updatedWork.image;
@@ -103,9 +104,10 @@ class WorksStore {
       }
       updatedWork.image = imageUrl;
       this.works = this.works.map((w) => (w.id === id ? updatedWork : w));
-      toast.success("Работа успешно обновлена!");
+      return updatedWork; // возвращаем обновлённую работу
     } catch (error: any) {
       toast.error(error.message);
+      return null; // или можно выбросить ошибку, если это предпочтительнее
     }
   }
 
@@ -133,7 +135,24 @@ class WorksStore {
     const work = this.works.find((w) => w.id === id);
     if (!work) return;
     const payload = { isFavorite: !work.isFavorite };
-    await this.updateWork(id, payload);
+    const updatedWork = await this.updateWork(id, payload);
+    console.log("updatedWork:", updatedWork);
+    if (!updatedWork) return;
+
+    const { userStore } = this.rootStore;
+    if (userStore.user) {
+      let fav: number[] = userStore.user.favoriteWorks || [];
+      if (updatedWork.isFavorite) {
+        if (!fav.includes(id)) {
+          fav = [...fav, id];
+        }
+      } else {
+        fav = fav.filter((workId: number) => workId !== id);
+      }
+      console.log("New favoriteWorks array:", fav);
+      const updatedUser = await userStore.updateUser({ favoriteWorks: fav });
+      console.log("updatedUser:", updatedUser);
+    }
   }
 }
 

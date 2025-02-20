@@ -4,6 +4,7 @@ import WorksStore from "./WorksStore";
 import UserStore from "./UserStore";
 import PostStore from "./PostStore";
 import CommunityStore from "./CommunityStore";
+import CourseStore from "./CourseStore";
 
 export interface IRootStore {
   authStore: AuthStore;
@@ -11,6 +12,7 @@ export interface IRootStore {
   userStore: UserStore;
   postStore: PostStore;
   communityStore: CommunityStore;
+  courseStore: CourseStore;
 }
 
 class RootStore {
@@ -19,6 +21,7 @@ class RootStore {
   userStore: UserStore;
   postStore: PostStore;
   communityStore: CommunityStore;
+  courseStore: CourseStore;
 
   constructor() {
     this.authStore = new AuthStore(this);
@@ -26,6 +29,7 @@ class RootStore {
     this.userStore = new UserStore(this);
     this.postStore = new PostStore(this);
     this.communityStore = new CommunityStore(this);
+    this.courseStore = new CourseStore(this);
   }
 }
 

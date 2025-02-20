@@ -1,7 +1,7 @@
 // src/components/CustomHeader.tsx
 import React from "react";
 import { Layout, Menu, Dropdown, Button, Avatar } from "antd";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DownOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import logo from "../../assets/logo.png";
@@ -14,7 +14,7 @@ const { Header } = Layout;
 const CustomHeader: React.FC = observer(() => {
   const { authStore } = useRootStore();
   const location = useLocation();
-
+  const navigate = useNavigate();
   let activeKey: string = "";
   if (location.pathname === "/" || location.pathname === "/home") {
     activeKey = "/";
@@ -37,7 +37,13 @@ const CustomHeader: React.FC = observer(() => {
       <Menu.Item key="community">
         <Link to="/my-communities">Чаты</Link>
       </Menu.Item>
-      <Menu.Item key="logout" onClick={() => authStore.logout()}>
+      <Menu.Item
+        key="logout"
+        onClick={() => {
+          authStore.logout();
+          navigate("/");
+        }}
+      >
         Выйти
       </Menu.Item>
     </Menu>

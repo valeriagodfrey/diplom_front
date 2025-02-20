@@ -1,6 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Card, Button, Calendar, Progress, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useRootStore } from "../stores/RootStore";
+import JoinModal from "./JoinModal";
+import CreateCourseModal from "./CreateCourseModal";
+import { observer } from "mobx-react-lite";
 
 const PageWrapper = styled.div`
   padding: 24px;
@@ -107,10 +113,11 @@ const CourseMeta = styled.div`
   font-size: 14px;
 `;
 
-const Courses = () => {
+export const Courses = observer(() => {
   const navigate = useNavigate();
+  const { userStore, authStore, courseStore } = useRootStore();
 
-  // Моковые данные для курсов
+  // Моковые данные для курсов (прогресс пользователя)
   const courses = [
     {
       id: 1,
@@ -151,26 +158,62 @@ const Courses = () => {
     },
   ];
 
-  // Моковые данные для ближайшего курса
+  // Моковые данные для ближайшего курса (для присоединения)
   const upcomingCourse = {
     id: 1,
     title: "Где искать вдохновение в 21 веке?",
     description:
-      "Этот курс поможет вам открыть для себя разнообразные источники вдохновения, которые соответствуют современным реалиям. Мы рассмотрим, как использовать социальные сети, онлайн-платформы и виртуальные сообщества для поиска идей.",
+      "Этот курс поможет вам открыть для себя разнообразные источники вдохновения, использующих современные технологии. Мы рассмотрим, как использовать социальные сети, онлайн-платформы и виртуальные сообщества для поиска идей.",
     duration: "2 месяца",
     sessions: "15 занятий",
     price: "$24.99",
+    author: "John Doe",
   };
 
-  // Обработчик клика на курс для перехода к подробностям курса
   const handleCourseClick = (courseId: number) => {
     navigate(`/courses/${courseId}`);
   };
 
-  // Обработчик клика на баннер для курса по AI Design
   const handleBannerClick = () => {
-    navigate("/courses/ai-design");
+    navigate("/courses/1");
   };
+
+  const [isJoinModalVisible, setIsJoinModalVisible] = useState(false);
+  const [isCreateCourseModalVisible, setIsCreateCourseModalVisible] =
+    useState(false);
+
+  const openJoinModal = () => {
+    setIsJoinModalVisible(true);
+  };
+
+  const handleJoinConfirm = () => {
+    console.log("Пользователь присоединился к курсу");
+    setIsJoinModalVisible(false);
+  };
+
+  const handleJoinCancel = () => {
+    setIsJoinModalVisible(false);
+  };
+
+  const openCreateCourseModal = () => {
+    setIsCreateCourseModalVisible(true);
+  };
+
+  const handleCreateCourseSubmit = async (data: any) => {
+    try {
+      await courseStore.createCourse(data);
+      setIsCreateCourseModalVisible(false);
+      // Здесь можно обновить список курсов, если он используется
+    } catch (error) {
+      console.error("Ошибка создания курса:", error);
+    }
+  };
+  useEffect(() => {
+    if (authStore.user) {
+      userStore.fetchUser(authStore.user.id);
+    }
+  }, [authStore.user, userStore]);
+  console.log("authStore.user", authStore.user);
 
   return (
     <PageWrapper>
@@ -185,6 +228,17 @@ const Courses = () => {
         </BannerContent>
       </TopBanner>
 
+      {/* Если пользователь - ментор, показываем кнопку создания курса */}
+      {userStore.user && userStore.user?.role === "mentor" && (
+        <Button
+          type="primary"
+          onClick={openCreateCourseModal}
+          style={{ marginBottom: 24 }}
+        >
+          Создать курс
+        </Button>
+      )}
+
       <GridContainer>
         <div>
           <ProgressSection>
@@ -194,7 +248,7 @@ const Courses = () => {
                 <CourseCard
                   key={course.id}
                   style={{ background: course.background }}
-                  onClick={() => handleCourseClick(course.id)}
+                  onClick={() => handleCourseClick(course.id + 1)}
                 >
                   <CourseTitle>{course.title}</CourseTitle>
                   <StyledProgress
@@ -228,14 +282,29 @@ const Courses = () => {
               <span>{upcomingCourse.duration}</span>
               <span>{upcomingCourse.sessions}</span>
             </CourseMeta>
-            <Button type="primary" style={{ marginTop: 16 }} block>
-              Присоединится к курсу
+            <Button
+              type="primary"
+              style={{ marginTop: 16 }}
+              block
+              onClick={openJoinModal}
+            >
+              Присоединиться к курсу
             </Button>
+            <JoinModal
+              visible={isJoinModalVisible}
+              onCancel={handleJoinCancel}
+              onSubmit={handleJoinConfirm}
+              course={upcomingCourse}
+            />
           </UpcomingCourse>
         </div>
       </GridContainer>
+
+      <CreateCourseModal
+        visible={isCreateCourseModalVisible}
+        onCancel={() => setIsCreateCourseModalVisible(false)}
+        onSubmit={handleCreateCourseSubmit}
+      />
     </PageWrapper>
   );
-};
-
-export default Courses;
+});

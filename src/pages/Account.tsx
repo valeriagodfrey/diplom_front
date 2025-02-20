@@ -3,9 +3,11 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
 import { useRootStore } from "../stores/RootStore";
-import { Button, Input } from "antd";
+import { Button, Input, DatePicker } from "antd";
 import { EditOutlined, SaveOutlined } from "@ant-design/icons";
+import moment from "moment";
 import avatar from "../assets/avatar.jpg";
+import EditableMaskedField from "../components/EditableMaskedField";
 
 const ProfileWrapper = styled.div`
   padding: 24px;
@@ -71,6 +73,34 @@ const Avatar = styled.div`
   }
 `;
 
+// Компонент для редактируемого поля с использованием DatePicker
+const EditableDateField = ({
+  label,
+  value,
+  isEditing,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  isEditing: boolean;
+  onChange: (newValue: string) => void;
+}) => {
+  return (
+    <Field>
+      <span>{label}</span>
+      {isEditing ? (
+        <DatePicker
+          value={value ? moment(value, "YYYY-MM-DD") : null}
+          onChange={(date, dateString) => onChange(dateString as string)}
+          format="YYYY-MM-DD"
+        />
+      ) : (
+        <strong>{value && value.trim() !== "" ? value : "–"}</strong>
+      )}
+    </Field>
+  );
+};
+
 const EditableField = ({
   label,
   value,
@@ -120,7 +150,6 @@ export const Account = observer(() => {
 
   useEffect(() => {
     if (authStore.user) {
-      // Предполагаем, что authStore.user.id соответствует id в userStore
       userStore.fetchUser(authStore.user.id);
     }
   }, [authStore.user, userStore]);
@@ -276,7 +305,8 @@ export const Account = observer(() => {
               setPersonalInfoState((prev) => ({ ...prev, lastName: value }))
             }
           />
-          <EditableField
+          {/* Используем EditableDateField для Даты рождения */}
+          <EditableDateField
             label="Дата рождения"
             value={personalInfoState.dob}
             isEditing={isEditingPersonalInfo}
@@ -284,7 +314,8 @@ export const Account = observer(() => {
               setPersonalInfoState((prev) => ({ ...prev, dob: value }))
             }
           />
-          <EditableField
+          <EditableMaskedField
+            mask="+373 (779) 99-999"
             label="Номер телефона"
             value={personalInfoState.phone}
             isEditing={isEditingPersonalInfo}
@@ -350,3 +381,5 @@ export const Account = observer(() => {
     </ProfileWrapper>
   );
 });
+
+export default Account;

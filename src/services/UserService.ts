@@ -11,6 +11,7 @@ export interface IUser {
   city?: string; // город (необязательное)
   postalCode?: string; // почтовый индекс (необязательное)
   joinedCommunities: number[];
+  favoriteWorks: number[];
 }
 
 class UserService {

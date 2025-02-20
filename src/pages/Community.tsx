@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
@@ -16,6 +17,7 @@ import { observer } from "mobx-react-lite";
 import { useRootStore } from "../stores/RootStore";
 import PostModal from "./PostModal";
 import capitalize from "capitalize";
+import { toast } from "react-toastify";
 
 const { TabPane } = Tabs;
 
@@ -164,7 +166,6 @@ export const Community = observer(() => {
   const [editForm] = Form.useForm();
   const [selectedCommunity, setSelectedCommunity] = useState<any>(null);
   const [localIsMember, setLocalIsMember] = useState(false);
-  console.log("localIsMember", localIsMember);
 
   useEffect(() => {
     if (selectedCommunity && userStore.user) {
@@ -207,7 +208,7 @@ export const Community = observer(() => {
   const handleCreateCommunity = async () => {
     try {
       const values = await createForm.validateFields();
-      if (!authStore.user?.id) throw new Error("Пользователь не авторизован");
+      if (!authStore.user?.id) toast.error("Пользователь не авторизован");
       const payload = { ...values, userId: authStore.user.id };
       await communityStore.createCommunity(payload);
       setIsCreateModalVisible(false);
@@ -275,7 +276,7 @@ export const Community = observer(() => {
       await refreshSelectedCommunity();
       await userStore.fetchUser(authStore.user.id);
     } catch (error) {
-      console.error("Ошибка вступления в сообщество:", error);
+      toast.error("Ошибка вступления в сообщество: необходима авторизация");
     }
   };
 

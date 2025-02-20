@@ -77,7 +77,7 @@ const WorkCard = styled.div`
 `;
 
 export const MyGallery = observer(() => {
-  const { authStore } = useRootStore();
+  const { authStore, userStore } = useRootStore();
   const worksController = useWorksController();
   const [activeTab, setActiveTab] = useState("all");
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
@@ -85,19 +85,17 @@ export const MyGallery = observer(() => {
   const [createForm] = Form.useForm();
   const [editForm] = Form.useForm();
   const [selectedWork, setSelectedWork] = useState<any>(null);
-
+  useEffect(() => {
+    if (authStore.user) {
+      userStore.fetchUser(authStore.user.id);
+    }
+  }, [authStore.user, userStore]);
   useEffect(() => {
     if (authStore.user) {
       worksController.fetchMyWorks(authStore.user.id);
+      worksController.fetchWorks();
     }
   }, [authStore.user, worksController]);
-
-  const filteredWorks = worksController.works.filter((work: any) => {
-    if (activeTab === "favorites") {
-      return work.isFavorite;
-    }
-    return true;
-  });
 
   // Создание работы
   const handleCreate = async () => {
@@ -174,7 +172,7 @@ export const MyGallery = observer(() => {
         >
           <TabPane tab="Все работы" key="all">
             <WorksGrid>
-              {filteredWorks.map((work: any) => (
+              {worksController.myWorks.map((work: any) => (
                 <WorkCard key={work.id}>
                   <img src={work.image} alt={work.title} />
                   <div className="card-content">
@@ -204,7 +202,9 @@ export const MyGallery = observer(() => {
           <TabPane tab="Сохраненные работы" key="favorites">
             <WorksGrid>
               {worksController.works
-                .filter((work: any) => work.isFavorite)
+                .filter((work: any) =>
+                  userStore.user.favoriteWorks.find((id) => id === work.id)
+                )
                 .map((work: any) => (
                   <WorkCard key={work.id}>
                     <img src={work.image} alt={work.title} />

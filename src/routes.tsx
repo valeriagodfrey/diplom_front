@@ -3,7 +3,6 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import CustomLayout from "./shared/components/Layout";
-import Courses from "./pages/Courses";
 import Toast from "./components/Toast";
 import { ConfigProvider } from "antd";
 import { ScrollToTop } from "./utils/scroll-to-top";
@@ -14,6 +13,7 @@ import { Account } from "./pages/Account";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Community } from "./pages/Community";
 import CourseDetailPage from "./pages/CourseDetailPage";
+import { Courses } from "./pages/Courses";
 
 const AppRoutes: React.FC = () => (
   <RootStoreProvider>
