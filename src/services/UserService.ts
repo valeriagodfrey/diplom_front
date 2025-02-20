@@ -16,7 +16,7 @@ export interface IUser {
 
 class UserService {
   static async getUserById(id: string): Promise<IUser> {
-    const response = await fetch(`import.meta.env.VITE_API/users/${id}`, {
+    const response = await fetch(`${import.meta.env.VITE_API}/users/${id}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -31,7 +31,7 @@ class UserService {
     id: string,
     updateData: Partial<IUser>
   ): Promise<IUser> {
-    const response = await fetch(`import.meta.env.VITE_API/users/${id}`, {
+    const response = await fetch(`${import.meta.env.VITE_API}/users/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updateData),

@@ -34,7 +34,7 @@ class AuthStore {
 
     try {
       const response = await fetch(
-        "import.meta.env.VITE_API/auth/registration",
+        `${import.meta.env.VITE_API}/auth/registration`,
         {
           method: "POST",
           headers: {
@@ -79,7 +79,7 @@ class AuthStore {
     this.error = null;
 
     try {
-      const response = await fetch("import.meta.env.VITE_API/auth/login", {
+      const response = await fetch(`${import.meta.env.VITE_API}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +122,7 @@ class AuthStore {
     this.isLoading = true;
 
     try {
-      const response = await fetch("import.meta.env.VITE_API/auth/check", {
+      const response = await fetch(`${import.meta.env.VITE_API}/auth/check`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

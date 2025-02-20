@@ -14,7 +14,7 @@ export interface IPost {
 class PostService {
   static async getPostsByCommunity(communityId: number): Promise<IPost[]> {
     const response = await fetch(
-      `import.meta.env.VITE_API/communities/${communityId}/posts`,
+      `${import.meta.env.VITE_API}/communities/${communityId}/posts`,
       {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -29,7 +29,7 @@ class PostService {
 
   static async createPost(communityId: number, data: any): Promise<IPost> {
     const response = await fetch(
-      `import.meta.env.VITE_API/communities/${communityId}/posts`,
+      `${import.meta.env.VITE_API}/communities/${communityId}/posts`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -45,7 +45,7 @@ class PostService {
 
   static async deletePost(communityId: number, postId: number): Promise<any> {
     const response = await fetch(
-      `import.meta.env.VITE_API/communities/${communityId}/posts/${postId}`,
+      `${import.meta.env.VITE_API}/communities/${communityId}/posts/${postId}`,
       {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
