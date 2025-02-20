@@ -16,7 +16,7 @@ export interface ICommunity {
 
 class CommunityService {
   static async getCommunities(): Promise<ICommunity[]> {
-    const response = await fetch("http://localhost:4200/communities", {
+    const response = await fetch("import.meta.env.VITE_API/communities", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -29,7 +29,7 @@ class CommunityService {
 
   static async getMyCommunities(userId: string): Promise<ICommunity[]> {
     const response = await fetch(
-      `http://localhost:4200/communities/my/${userId}`,
+      `import.meta.env.VITE_API/communities/my/${userId}`,
       {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -43,7 +43,7 @@ class CommunityService {
   }
 
   static async createCommunity(data: any): Promise<ICommunity> {
-    const response = await fetch("http://localhost:4200/communities", {
+    const response = await fetch("import.meta.env.VITE_API/communities", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -56,7 +56,7 @@ class CommunityService {
   }
 
   static async updateCommunity(id: number, data: any): Promise<ICommunity> {
-    const response = await fetch(`http://localhost:4200/communities/${id}`, {
+    const response = await fetch(`import.meta.env.VITE_API/communities/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -69,7 +69,7 @@ class CommunityService {
   }
 
   static async deleteCommunity(id: number): Promise<any> {
-    const response = await fetch(`http://localhost:4200/communities/${id}`, {
+    const response = await fetch(`import.meta.env.VITE_API/communities/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
@@ -82,7 +82,7 @@ class CommunityService {
 
   static async joinCommunity(id: number, userId: string): Promise<ICommunity> {
     const response = await fetch(
-      `http://localhost:4200/communities/${id}/join`,
+      `import.meta.env.VITE_API/communities/${id}/join`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -98,7 +98,7 @@ class CommunityService {
 
   static async leaveCommunity(id: number, userId: string): Promise<ICommunity> {
     const response = await fetch(
-      `http://localhost:4200/communities/${id}/leave`,
+      `import.meta.env.VITE_API/communities/${id}/leave`,
       {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -112,7 +112,7 @@ class CommunityService {
     return response.json();
   }
   static async getCommunityById(id: number): Promise<any> {
-    const response = await fetch(`http://localhost:4200/communities/${id}`, {
+    const response = await fetch(`import.meta.env.VITE_API/communities/${id}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });

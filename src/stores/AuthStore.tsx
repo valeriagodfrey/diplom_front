@@ -33,20 +33,23 @@ class AuthStore {
     this.error = null;
 
     try {
-      const response = await fetch("http://localhost:4200/auth/registration", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          firstName,
-          secondName,
-          nickName,
-          role,
-        }),
-      });
+      const response = await fetch(
+        "import.meta.env.VITE_API/auth/registration",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            firstName,
+            secondName,
+            nickName,
+            role,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorResponse = await response.json();
@@ -76,7 +79,7 @@ class AuthStore {
     this.error = null;
 
     try {
-      const response = await fetch("http://localhost:4200/auth/login", {
+      const response = await fetch("import.meta.env.VITE_API/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -119,7 +122,7 @@ class AuthStore {
     this.isLoading = true;
 
     try {
-      const response = await fetch("http://localhost:4200/auth/check", {
+      const response = await fetch("import.meta.env.VITE_API/auth/check", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

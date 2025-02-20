@@ -12,7 +12,7 @@ export interface ICourse {
 
 class CourseService {
   static async getCourses(): Promise<ICourse[]> {
-    const response = await fetch("http://localhost:4200/courses", {
+    const response = await fetch("import.meta.env.VITE_API/courses", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -24,7 +24,7 @@ class CourseService {
   }
 
   static async getCourseById(id: number): Promise<ICourse> {
-    const response = await fetch(`http://localhost:4200/courses/${id}`, {
+    const response = await fetch(`import.meta.env.VITE_API/courses/${id}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -36,7 +36,7 @@ class CourseService {
   }
 
   static async createCourse(data: any): Promise<ICourse> {
-    const response = await fetch("http://localhost:4200/courses", {
+    const response = await fetch("import.meta.env.VITE_API/courses", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -49,7 +49,7 @@ class CourseService {
   }
 
   static async updateCourse(id: number, data: any): Promise<ICourse> {
-    const response = await fetch(`http://localhost:4200/courses/${id}`, {
+    const response = await fetch(`import.meta.env.VITE_API/courses/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -62,7 +62,7 @@ class CourseService {
   }
 
   static async deleteCourse(id: number): Promise<any> {
-    const response = await fetch(`http://localhost:4200/courses/${id}`, {
+    const response = await fetch(`import.meta.env.VITE_API/courses/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });

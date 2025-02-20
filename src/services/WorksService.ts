@@ -2,7 +2,7 @@
 // src/services/WorksService.ts
 class WorksService {
   static async getWorks() {
-    const response = await fetch("http://localhost:4200/works", {
+    const response = await fetch("import.meta.env.VITE_API/works", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -14,7 +14,7 @@ class WorksService {
   }
 
   static async getMyWorks(id: string) {
-    const response = await fetch(`http://localhost:4200/works/my/${id}`, {
+    const response = await fetch(`import.meta.env.VITE_API/works/my/${id}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -27,7 +27,7 @@ class WorksService {
 
   // Метод принимает FormData напрямую
   static async createWork(formData: FormData) {
-    const response = await fetch("http://localhost:4200/works/upload", {
+    const response = await fetch("import.meta.env.VITE_API/works/upload", {
       method: "POST",
       body: formData,
       // Не указываем заголовок Content-Type, чтобы браузер сам сформировал multipart/form-data с boundary
@@ -40,7 +40,7 @@ class WorksService {
   }
 
   static async updateWork(id: number, payload: any) {
-    const response = await fetch(`http://localhost:4200/works/${id}`, {
+    const response = await fetch(`import.meta.env.VITE_API/works/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -53,7 +53,7 @@ class WorksService {
   }
 
   static async remove(id: number) {
-    const response = await fetch(`http://localhost:4200/works/${id}`, {
+    const response = await fetch(`import.meta.env.VITE_API/works/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
